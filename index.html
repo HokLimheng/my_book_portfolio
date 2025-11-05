@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="My personal reading portfolio - Books I've read and what I learned from them">
+  <title>Books I've Read - Reading Portfolio</title>
+  
+  <!-- Favicon: Simple book emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+
+  <!--
+    ═══════════════════════════════════════════════════════════════════════════
+    BOOKS I'VE READ - Personal Reading Portfolio
+    ═══════════════════════════════════════════════════════════════════════════
+    
+    DEPLOYMENT INSTRUCTIONS:
+    1. For username.github.io: Push this file to the root of your repository
+       on the 'main' branch.
+    2. For project site (username.github.io/repo-name): Push to 'gh-pages' 
+       branch or configure in repo Settings > Pages.
+    3. Enable GitHub Pages in repository settings if needed.
+    
+    LOCALSTORAGE KEY:
+    - This app stores all book data in: 'booksReadPortfolio'
+    - Data persists per domain (username.github.io or localhost during dev)
+    
+    FEATURES:
+    - Add/Edit/Delete books with cover images (stored as Base64)
+    - Search by title, author, or tags
+    - Filter by tags
+    - Export/Import JSON backup
+    - Fully responsive, accessible design
+    - No backend required - pure frontend
+    
+    ═══════════════════════════════════════════════════════════════════════════
+  -->
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       CSS STYLES - Classic & Elegant Nude/Neutral Palette
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    :root {
+      /* Neutral color palette - soft beiges, warm greys, browns */
+      --color-bg: #faf8f5;
+      --color-surface: #ffffff;
+      --color-surface-elevated: #fffef9;
+      --color-border: #e8e4df;
+      --color-text-primary: #2d2a26;
+      --color-text-secondary: #6b6660;
+      --color-text-tertiary: #8f8983;
+      --color-accent: #7d6e65;
+      --color-accent-hover: #5f5247;
+      --color-tag: #e9e4dc;
+      --color-tag-text: #5f5247;
+      --color-error: #a85b4a;
+      --color-success: #6b7d65;
+      
+      /* Spacing & sizing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 0.75rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 3rem;
+      
+      /* Border radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+      --shadow-md: 0 4px 6px rgba(45, 42, 38, 0.08), 0 1px 3px rgba(45, 42, 38, 0.06);
+      --shadow-lg: 0 10px 15px rgba(45, 42, 38, 0.1), 0 4px 6px rgba(45, 42, 38, 0.08);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       HEADER & PROFILE SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .site-header {
+      background-color: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--spacing-xl) var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .profile-section {
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      gap: var(--spacing-xl);
+      align-items: center;
+    }
+    
+    .profile-image-container {
+      flex-shrink: 0;
+    }
+    
+    .profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .profile-info {
+      flex: 1;
+    }
+    
+    .profile-name {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-xs);
+      letter-spacing: -0.02em;
+    }
+    
+    .site-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .profile-bio {
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-md);
+      line-height: 1.6;
+    }
+    
+    .profile-links {
+      display: flex;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+    }
+    
+    .profile-link {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .profile-link:hover {
+      color: var(--color-accent-hover);
+      text-decoration: underline;
+    }
+    
+    .profile-link::before {
+      content: '→';
+    }
+    
+    /* Help section */
+    .help-section {
+      background-color: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+      font-size: 0.9rem;
+    }
+    
+    .help-section h3 {
+      font-size: 1rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-text-primary);
+    }
+    
+    .help-section p {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTROLS SECTION
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .main-controls {
+      max-width: 1200px;
+      margin: 0 auto var(--spacing-xl);
+      padding: 0 var(--spacing-lg);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+    
+    .btn {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    .btn-primary {
+      background-color: var(--color-accent);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--color-accent-hover);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--color-surface-elevated);
+      border-color: var(--color-accent);
+    }
+    
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background-color: var(--color-surface);
+      transition: border-color 0.2s;
+    }
+    
+    .search-box:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    .tag-filter-section {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .tag-filter-label {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .tag-filter-btn {
+      padding: var(--spacing-xs) var(--spacing-md);
+      background-color: var(--color-tag);
+      color: var(--color-tag-text);
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .tag-filter-btn:hover {
+      border-color: var(--color-accent);
+    }
+    
+    .tag-filter-btn.active {
+      background-color: var(--color-accent);
+      color: white;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       BOOKS GRID
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .books-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg) var(--spacing-2xl);
+    }
+    
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .book-card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .book-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--color-accent);
+    }
+    
+    .book-cover {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      background-color: var(--color-border);
+    }
+    
+    .book-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-xs);
+      line-height: 1.3;
+    }
+    
+    .book-author {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .book-date {
+      font-size: 0.85rem;
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .book-opinion-preview {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .book-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .tag {
+      padding: 0.25rem 0.5rem;
+      background-color: var(--color-tag);
+      color: var(--color-tag-text);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+    }
+    
+    .book-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+    
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border-radius: var(--radius-sm);
+    }
+    
+    .btn-edit {
+      background-color: var(--color-surface-elevated);
+      color: var(--color-accent);
+      border: 1px solid var(--color-border);
+    }
+    
+    .btn-edit:hover {
+      background-color: var(--color-accent);
+      color: white;
+    }
+    
+    .btn-delete {
+      background-color: var(--color-surface-elevated);
+      color: var(--color-error);
+      border: 1px solid var(--color-border);
+    }
+    
+    .btn-delete:hover {
+      background-color: var(--color-error);
+      color: white;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-2xl);
+      color: var(--color-text-tertiary);
+    }
+    
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .empty-state-text {
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MODAL STYLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(45, 42, 38, 0.5);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: var(--spacing-lg);
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .modal-header {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-tertiary);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    
+    .modal-close:hover {
+      background-color: var(--color-border);
+      color: var(--color-text-primary);
+    }
+    
+    .modal-content {
+      padding: var(--spacing-lg);
+    }
+    
+    /* Detail modal specific styles */
+    .detail-cover {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-lg);
+      background-color: var(--color-border);
+    }
+    
+    .detail-section {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .detail-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .detail-section p {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       FORM STYLES
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      font-size: 0.95rem;
+    }
+    
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background-color: var(--color-surface);
+      transition: border-color 0.2s;
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-help {
+      font-size: 0.85rem;
+      color: var(--color-text-tertiary);
+      margin-top: var(--spacing-xs);
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: flex-end;
+      margin-top: var(--spacing-xl);
+    }
+    
+    .cover-preview {
+      margin-top: var(--spacing-sm);
+      max-width: 200px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+    
+    .error-message {
+      background-color: #fdf0ed;
+      color: var(--color-error);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-error);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       RESPONSIVE DESIGN
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    @media (max-width: 768px) {
+      .books-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .main-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-box {
+        width: 100%;
+      }
+      
+      .modal {
+        margin: var(--spacing-md);
+      }
+      
+      .site-title {
+        font-size: 1.5rem;
+      }
+      
+      .profile-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile-image {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .profile-name {
+        font-size: 1.5rem;
+      }
+      
+      .profile-links {
+        justify-content: center;
+      }
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       UTILITY CLASSES
+       ═══════════════════════════════════════════════════════════════════════ */
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       HEADER & PROFILE
+       ═══════════════════════════════════════════════════════════════════════ -->
+  
+  <header class="site-header">
+    <div class="header-content">
+      <div class="profile-section">
+        <div class="profile-image-container">
+          <!-- Replace this placeholder image with your own photo -->
+          <img 
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e8e4df' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-size='80' text-anchor='middle' dy='.3em' fill='%237d6e65'%3E📖%3C/text%3E%3C/svg%3E" 
+            alt="Profile photo" 
+            class="profile-image"
+          >
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">Your Name</h1>
+          <p class="site-title">Books I've Read</p>
+          <p class="profile-bio">
+            Avid reader exploring fiction, non-fiction, and everything in between. 
+            I love diving deep into books about philosophy, history, and personal growth. 
+            This is my personal library where I share insights and reflections from my reading journey.
+          </p>
+          <div class="profile-links">
+            <a href="https://github.com/your-username" class="profile-link" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+            <a href="https://twitter.com/your-username" class="profile-link" target="_blank" rel="noopener noreferrer">
+              Twitter
+            </a>
+            <a href="mailto:your.email@example.com" class="profile-link">
+              Email
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="help-section">
+        <h3>How to use this portfolio</h3>
+        <p><strong>Add a book:</strong> Click the "Add Book" button to record a book you've finished, including cover image, notes, and what you learned.</p>
+        <p><strong>Search & filter:</strong> Use the search box to find books by title, author, or tags. Click tag filters to view books by category.</p>
+        <p><strong>Backup:</strong> Export your library as JSON for backup, or import a previous backup to restore your collection.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MAIN CONTROLS
+       ═══════════════════════════════════════════════════════════════════════ -->
+  
+  <main>
+    <div class="main-controls">
+      <button class="btn btn-primary" id="addBookBtn" aria-label="Add a new book">
+        + Add Book
+      </button>
+      
+      <input 
+        type="text" 
+        class="search-box" 
+        id="searchBox" 
+        placeholder="Search by title, author, or tags..."
+        aria-label="Search books"
+      >
+      
+      <button class="btn btn-secondary" id="exportBtn" aria-label="Export books as JSON">
+        Export JSON
+      </button>
+      
+      <button class="btn btn-secondary" id="importBtn" aria-label="Import books from JSON">
+        Import JSON
+      </button>
+      <input type="file" id="importFile" accept=".json" class="hidden" aria-hidden="true">
+    </div>
+
+    <!-- Tag filters will be dynamically inserted here -->
+    <div class="main-controls tag-filter-section" id="tagFilterSection" style="display: none;">
+      <span class="tag-filter-label">Filter by tag:</span>
+      <div id="tagFilters"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BOOKS GRID
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <div class="books-container">
+      <div class="books-grid" id="booksGrid">
+        <!-- Books will be dynamically rendered here -->
+      </div>
+      
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">📚</div>
+        <p class="empty-state-text">No books yet</p>
+        <p>Start building your reading portfolio by adding your first book!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MODAL: ADD/EDIT BOOK FORM
+       ═══════════════════════════════════════════════════════════════════════ -->
+  
+  <div class="modal-overlay" id="formModal" aria-hidden="true" role="dialog" aria-labelledby="formModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="formModalTitle">Add Book</h2>
+        <button class="modal-close" aria-label="Close modal" id="closeFormModal">×</button>
+      </div>
+      <div class="modal-content">
+        <div id="formError" class="error-message hidden" role="alert"></div>
+        
+        <form id="bookForm">
+          <div class="form-group">
+            <label for="coverInput" class="form-label">Cover Image</label>
+            <input 
+              type="file" 
+              id="coverInput" 
+              class="form-input" 
+              accept="image/*"
+              aria-describedby="coverHelp"
+            >
+            <p class="form-help" id="coverHelp">Upload a cover image (will be resized for storage)</p>
+            <img id="coverPreview" class="cover-preview hidden" alt="Book cover preview">
+          </div>
+          
+          <div class="form-group">
+            <label for="titleInput" class="form-label">Title *</label>
+            <input 
+              type="text" 
+              id="titleInput" 
+              class="form-input" 
+              required
+              aria-required="true"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="authorInput" class="form-label">Author *</label>
+            <input 
+              type="text" 
+              id="authorInput" 
+              class="form-input" 
+              required
+              aria-required="true"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="dateInput" class="form-label">Date Finished</label>
+            <input 
+              type="date" 
+              id="dateInput" 
+              class="form-input"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="opinionInput" class="form-label">Short Opinion/Notes</label>
+            <textarea 
+              id="opinionInput" 
+              class="form-textarea"
+              placeholder="What did you think of this book?"
+            ></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="learnedInput" class="form-label">What I Learned</label>
+            <textarea 
+              id="learnedInput" 
+              class="form-textarea"
+              placeholder="Key insights, lessons, or takeaways..."
+            ></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="tagsInput" class="form-label">Tags</label>
+            <input 
+              type="text" 
+              id="tagsInput" 
+              class="form-input"
+              placeholder="fiction, philosophy, biography (comma-separated)"
+              aria-describedby="tagsHelp"
+            >
+            <p class="form-help" id="tagsHelp">Separate multiple tags with commas</p>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="cancelFormBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveBookBtn">Save Book</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MODAL: BOOK DETAIL VIEW
+       ═══════════════════════════════════════════════════════════════════════ -->
+  
+  <div class="modal-overlay" id="detailModal" aria-hidden="true" role="dialog" aria-labelledby="detailModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="detailModalTitle"></h2>
+        <button class="modal-close" aria-label="Close modal" id="closeDetailModal">×</button>
+      </div>
+      <div class="modal-content" id="detailContent">
+        <!-- Detail content will be dynamically rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       JAVASCRIPT - Application Logic
+       ═══════════════════════════════════════════════════════════════════════ -->
+  
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════
+    // CONSTANTS & STATE
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    const STORAGE_KEY = 'booksReadPortfolio';
+    const MAX_IMAGE_WIDTH = 800; // Resize images to max width for storage efficiency
+    const MAX_IMAGE_HEIGHT = 1200;
+    
+    let books = [];
+    let editingBookId = null;
+    let currentSearchTerm = '';
+    let currentTagFilter = null;
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // INITIALIZATION
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBooks();
+      renderBooks();
+      initializeEventListeners();
+    });
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // LOCALSTORAGE OPERATIONS
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Load books from localStorage
+     */
+    function loadBooks() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        books = stored ? JSON.parse(stored) : [];
+      } catch (error) {
+        console.error('Error loading books:', error);
+        books = [];
+      }
+    }
+    
+    /**
+     * Save books to localStorage with error handling for quota exceeded
+     */
+    function saveBooks() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+        return true;
+      } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+          showError('Storage limit reached! Try removing some books or reducing image sizes. You can export your data first for backup.');
+        } else {
+          showError('Error saving books: ' + error.message);
+        }
+        return false;
+      }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // IMAGE HANDLING
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Resize and convert image file to Base64 data URL
+     */
+    function resizeAndConvertImage(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) {
+          resolve(null);
+          return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            // Calculate new dimensions while maintaining aspect ratio
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > MAX_IMAGE_WIDTH) {
+              height = (height * MAX_IMAGE_WIDTH) / width;
+              width = MAX_IMAGE_WIDTH;
+            }
+            
+            if (height > MAX_IMAGE_HEIGHT) {
+              width = (width * MAX_IMAGE_HEIGHT) / height;
+              height = MAX_IMAGE_HEIGHT;
+            }
+            
+            // Create canvas and resize image
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convert to Base64 (JPEG for better compression)
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            resolve(dataUrl);
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // BOOK OPERATIONS
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Add or update a book
+     */
+    async function saveBook(bookData) {
+      try {
+        // Handle image upload
+        const coverFile = document.getElementById('coverInput').files[0];
+        let coverDataUrl = bookData.coverDataUrl || null;
+        
+        if (coverFile) {
+          coverDataUrl = await resizeAndConvertImage(coverFile);
+        }
+        
+        // Parse tags
+        const tagsInput = bookData.tags || '';
+        const tags = tagsInput
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(tag => tag.length > 0);
+        
+        const book = {
+          id: bookData.id || Date.now().toString(),
+          title: bookData.title,
+          author: bookData.author,
+          dateFinished: bookData.dateFinished || '',
+          coverDataUrl: coverDataUrl,
+          opinion: bookData.opinion || '',
+          learned: bookData.learned || '',
+          tags: tags,
+          createdAt: bookData.createdAt || Date.now()
+        };
+        
+        if (editingBookId) {
+          // Update existing book
+          const index = books.findIndex(b => b.id === editingBookId);
+          if (index !== -1) {
+            books[index] = book;
+          }
+        } else {
+          // Add new book
+          books.unshift(book);
+        }
+        
+        const saved = saveBooks();
+        if (saved) {
+          closeFormModal();
+          renderBooks();
+        }
+      } catch (error) {
+        showError('Error saving book: ' + error.message);
+      }
+    }
+    
+    /**
+     * Delete a book
+     */
+    function deleteBook(bookId) {
+      if (confirm('Are you sure you want to delete this book?')) {
+        books = books.filter(b => b.id !== bookId);
+        saveBooks();
+        renderBooks();
+      }
+    }
+    
+    /**
+     * Open edit form with book data
+     */
+    function editBook(bookId) {
+      const book = books.find(b => b.id === bookId);
+      if (!book) return;
+      
+      editingBookId = bookId;
+      
+      document.getElementById('formModalTitle').textContent = 'Edit Book';
+      document.getElementById('titleInput').value = book.title;
+      document.getElementById('authorInput').value = book.author;
+      document.getElementById('dateInput').value = book.dateFinished;
+      document.getElementById('opinionInput').value = book.opinion;
+      document.getElementById('learnedInput').value = book.learned;
+      document.getElementById('tagsInput').value = book.tags.join(', ');
+      
+      // Show existing cover if available
+      if (book.coverDataUrl) {
+        const preview = document.getElementById('coverPreview');
+        preview.src = book.coverDataUrl;
+        preview.classList.remove('hidden');
+      }
+      
+      openFormModal();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // RENDERING
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Render all books with current filters
+     */
+    function renderBooks() {
+      const grid = document.getElementById('booksGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      // Apply filters
+      let filteredBooks = books;
+      
+      // Search filter
+      if (currentSearchTerm) {
+        const term = currentSearchTerm.toLowerCase();
+        filteredBooks = filteredBooks.filter(book => 
+          book.title.toLowerCase().includes(term) ||
+          book.author.toLowerCase().includes(term) ||
+          book.tags.some(tag => tag.toLowerCase().includes(term))
+        );
+      }
+      
+      // Tag filter
+      if (currentTagFilter) {
+        filteredBooks = filteredBooks.filter(book => 
+          book.tags.includes(currentTagFilter)
+        );
+      }
+      
+      // Show/hide empty state
+      if (books.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      
+      emptyState.classList.add('hidden');
+      
+      if (filteredBooks.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p>No books match your search or filter.</p></div>';
+        return;
+      }
+      
+      // Render book cards
+      grid.innerHTML = filteredBooks.map(book => `
+        <article class="book-card" data-book-id="${book.id}">
+          ${book.coverDataUrl 
+            ? `<img src="${book.coverDataUrl}" alt="${book.title} cover" class="book-cover">` 
+            : '<div class="book-cover"></div>'
+          }
+          <h3 class="book-title">${escapeHtml(book.title)}</h3>
+          <p class="book-author">by ${escapeHtml(book.author)}</p>
+          ${book.dateFinished ? `<p class="book-date">Finished: ${formatDate(book.dateFinished)}</p>` : ''}
+          ${book.opinion ? `<p class="book-opinion-preview">${escapeHtml(book.opinion)}</p>` : ''}
+          <div class="book-tags">
+            ${book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+          </div>
+          <div class="book-actions" onclick="event.stopPropagation()">
+            <button class="btn btn-small btn-edit" onclick="editBook('${book.id}')" aria-label="Edit ${escapeHtml(book.title)}">
+              Edit
+            </button>
+            <button class="btn btn-small btn-delete" onclick="deleteBook('${book.id}')" aria-label="Delete ${escapeHtml(book.title)}">
+              Delete
+            </button>
+          </div>
+        </article>
+      `).join('');
+      
+      // Add click handlers for detail view
+      document.querySelectorAll('.book-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (!e.target.closest('.book-actions')) {
+            showBookDetail(card.dataset.bookId);
+          }
+        });
+      });
+      
+      // Update tag filters
+      renderTagFilters();
+    }
+    
+    /**
+     * Render tag filter buttons
+     */
+    function renderTagFilters() {
+      const allTags = new Set();
+      books.forEach(book => {
+        book.tags.forEach(tag => allTags.add(tag));
+      });
+      
+      const filterSection = document.getElementById('tagFilterSection');
+      const filtersContainer = document.getElementById('tagFilters');
+      
+      if (allTags.size === 0) {
+        filterSection.style.display = 'none';
+        return;
+      }
+      
+      filterSection.style.display = 'flex';
+      
+      const sortedTags = Array.from(allTags).sort();
+      filtersContainer.innerHTML = sortedTags.map(tag => `
+        <button 
+          class="tag-filter-btn ${currentTagFilter === tag ? 'active' : ''}" 
+          onclick="toggleTagFilter('${escapeHtml(tag)}')"
+          aria-pressed="${currentTagFilter === tag}"
+        >
+          ${escapeHtml(tag)}
+        </button>
+      `).join('');
+    }
+    
+    /**
+     * Show book detail modal
+     */
+    function showBookDetail(bookId) {
+      const book = books.find(b => b.id === bookId);
+      if (!book) return;
+      
+      document.getElementById('detailModalTitle').textContent = book.title;
+      
+      const content = document.getElementById('detailContent');
+      content.innerHTML = `
+        ${book.coverDataUrl 
+          ? `<img src="${book.coverDataUrl}" alt="${book.title} cover" class="detail-cover">` 
+          : ''
+        }
+        
+        <div class="detail-section">
+          <p><strong>Author:</strong> ${escapeHtml(book.author)}</p>
+          ${book.dateFinished ? `<p><strong>Finished:</strong> ${formatDate(book.dateFinished)}</p>` : ''}
+        </div>
+        
+        ${book.tags.length > 0 ? `
+          <div class="detail-section">
+            <h3>Tags</h3>
+            <div class="book-tags">
+              ${book.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+        
+        ${book.opinion ? `
+          <div class="detail-section">
+            <h3>My Opinion</h3>
+            <p>${escapeHtml(book.opinion)}</p>
+          </div>
+        ` : ''}
+        
+        ${book.learned ? `
+          <div class="detail-section">
+            <h3>What I Learned</h3>
+            <p>${escapeHtml(book.learned)}</p>
+          </div>
+        ` : ''}
+      `;
+      
+      openDetailModal();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // MODAL CONTROLS
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    function openFormModal() {
+      const modal = document.getElementById('formModal');
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.getElementById('titleInput').focus();
+    }
+    
+    function closeFormModal() {
+      const modal = document.getElementById('formModal');
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.getElementById('bookForm').reset();
+      document.getElementById('coverPreview').classList.add('hidden');
+      document.getElementById('formError').classList.add('hidden');
+      editingBookId = null;
+      document.getElementById('formModalTitle').textContent = 'Add Book';
+    }
+    
+    function openDetailModal() {
+      const modal = document.getElementById('detailModal');
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    
+    function closeDetailModal() {
+      const modal = document.getElementById('detailModal');
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // SEARCH & FILTER
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    function handleSearch(term) {
+      currentSearchTerm = term;
+      renderBooks();
+    }
+    
+    function toggleTagFilter(tag) {
+      currentTagFilter = currentTagFilter === tag ? null : tag;
+      renderBooks();
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // IMPORT/EXPORT
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Export books as JSON file
+     */
+    function exportBooks() {
+      const dataStr = JSON.stringify(books, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `books-backup-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    /**
+     * Import books from JSON file
+     */
+    function importBooks(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedBooks = JSON.parse(e.target.result);
+          
+          if (!Array.isArray(importedBooks)) {
+            throw new Error('Invalid file format');
+          }
+          
+          const shouldMerge = books.length > 0 && 
+            confirm('You have existing books. Do you want to merge with imported books? (Cancel to replace)');
+          
+          if (shouldMerge) {
+            // Merge: add imported books that don't exist
+            const existingIds = new Set(books.map(b => b.id));
+            const newBooks = importedBooks.filter(b => !existingIds.has(b.id));
+            books = [...books, ...newBooks];
+          } else {
+            // Replace
+            books = importedBooks;
+          }
+          
+          const saved = saveBooks();
+          if (saved) {
+            renderBooks();
+            alert('Books imported successfully!');
+          }
+        } catch (error) {
+          alert('Error importing books: ' + error.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // EVENT LISTENERS
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    function initializeEventListeners() {
+      // Add book button
+      document.getElementById('addBookBtn').addEventListener('click', openFormModal);
+      
+      // Form modal controls
+      document.getElementById('closeFormModal').addEventListener('click', closeFormModal);
+      document.getElementById('cancelFormBtn').addEventListener('click', closeFormModal);
+      
+      // Detail modal controls
+      document.getElementById('closeDetailModal').addEventListener('click', closeDetailModal);
+      
+      // Close modals on overlay click
+      document.getElementById('formModal').addEventListener('click', (e) => {
+        if (e.target.id === 'formModal') closeFormModal();
+      });
+      document.getElementById('detailModal').addEventListener('click', (e) => {
+        if (e.target.id === 'detailModal') closeDetailModal();
+      });
+      
+      // Form submission
+      document.getElementById('bookForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const formData = {
+          id: editingBookId,
+          title: document.getElementById('titleInput').value,
+          author: document.getElementById('authorInput').value,
+          dateFinished: document.getElementById('dateInput').value,
+          opinion: document.getElementById('opinionInput').value,
+          learned: document.getElementById('learnedInput').value,
+          tags: document.getElementById('tagsInput').value,
+          createdAt: editingBookId 
+            ? books.find(b => b.id === editingBookId).createdAt 
+            : Date.now()
+        };
+        
+        saveBook(formData);
+      });
+      
+      // Cover image preview
+      document.getElementById('coverInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            const dataUrl = await resizeAndConvertImage(file);
+            const preview = document.getElementById('coverPreview');
+            preview.src = dataUrl;
+            preview.classList.remove('hidden');
+          } catch (error) {
+            showError('Error processing image: ' + error.message);
+          }
+        }
+      });
+      
+      // Search
+      let searchTimeout;
+      document.getElementById('searchBox').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          handleSearch(e.target.value);
+        }, 300);
+      });
+      
+      // Export
+      document.getElementById('exportBtn').addEventListener('click', exportBooks);
+      
+      // Import
+      document.getElementById('importBtn').addEventListener('click', () => {
+        document.getElementById('importFile').click();
+      });
+      
+      document.getElementById('importFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          importBooks(file);
+          e.target.value = ''; // Reset file input
+        }
+      });
+      
+      // Keyboard accessibility for modals (ESC to close)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (document.getElementById('formModal').classList.contains('active')) {
+            closeFormModal();
+          }
+          if (document.getElementById('detailModal').classList.contains('active')) {
+            closeDetailModal();
+          }
+        }
+      });
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // UTILITY FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Escape HTML to prevent XSS
+     */
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    /**
+     * Format date string
+     */
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+    
+    /**
+     * Show error message in form
+     */
+    function showError(message) {
+      const errorDiv = document.getElementById('formError');
+      errorDiv.textContent = message;
+      errorDiv.classList.remove('hidden');
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        errorDiv.classList.add('hidden');
+      }, 5000);
+    }
+    
+    // Make functions globally accessible for inline event handlers
+    window.editBook = editBook;
+    window.deleteBook = deleteBook;
+    window.toggleTagFilter = toggleTagFilter;
+  </script>
+
+</body>
+</html>
